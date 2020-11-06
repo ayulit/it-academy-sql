@@ -130,4 +130,48 @@ class Test_TestAssignment {
                 () -> app.acquireMatrix(matrix1));
         assertTrue(thrown.getMessage().contains("Rows have different size"));
     }
+
+    @Test
+    void multiplyMatrices() {
+        Matrix firstMatrix = new Matrix(new Integer[][] {
+                {1, 5},
+                {2, 3},
+                {1, 7},
+        });
+
+        Matrix secondMatrix = new Matrix(new Integer[][] {
+                {1, 2, 3, 7},
+                {5, 2, 8, 1}
+        });
+
+        Matrix expected = new Matrix(new Integer[][] {
+                {26, 12, 43, 12},
+                {17, 10, 30, 17},
+                {36, 16, 59, 14}
+        });
+
+        Matrix actual = app.multiplyMatrices(firstMatrix, secondMatrix);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void multiplyMatricesInvalidSize() {
+        Matrix firstMatrix = new Matrix(new Integer[][] {
+                {1, 5},
+                {2, 3},
+                {1, 7},
+        });
+
+        Matrix secondMatrix = new Matrix(new Integer[][] {
+                {1, 2, 3, 7},
+                {5, 2, 8, 1},
+                {4, 9, 5, 6},
+        });
+
+        ArithmeticException thrown = assertThrows(
+                ArithmeticException.class,
+                () -> app.multiplyMatrices(firstMatrix, secondMatrix));
+        assertTrue(thrown.getMessage().contains("Invalid matrix size"));
+    }
 }

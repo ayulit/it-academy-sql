@@ -16,6 +16,18 @@ class Matrix {
         this.matrix = matrix;
     }
 
+    int getRowsNum() {
+        return matrix.length;
+    }
+
+    int getColumnsNum() {
+        return matrix[0].length;
+    }
+
+    Integer getCell(int row, int col) {
+        return matrix[row][col];
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -120,6 +132,117 @@ public class TestAssignment {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("read matrix. Values are not integer");
         }
+    }
 
+    // TODO unit-test
+    public Matrix eval(final String expression) {
+        return new Object() {
+            int pos = -1;
+            int currentChar;
+
+            void movePos() {
+                currentChar = (++pos < expression.length()) ? expression.charAt(pos) : -1;
+            }
+
+            boolean eat(int charToEat) {
+                while (currentChar == ' ') {
+                    movePos();
+                }
+                if (currentChar == charToEat) {
+                    movePos();
+                    return true;
+                }
+                return false;
+            }
+
+            Matrix parse() {
+                movePos();
+                Matrix matrix = parseExpression();
+                if (pos < expression.length()) {
+                    // TODO fix message
+                    throw new RuntimeException("Unexpected: " + (char) currentChar);
+                }
+                return matrix;
+            }
+
+            // TODO: adopt to JavaDoc
+            // Grammar:
+            // expression = term | expression `+` term | expression `-` term
+            // term = factor | term `*` factor | term `/` factor
+            // factor = `+` factor | `-` factor | `(` expression `)` | number | functionName factor | factor `^` factor
+
+            Matrix parseExpression() {
+                Matrix matrix = parseTerm();
+                for (;;) {
+                    if(eat('+')) {
+                        matrix = sumMatrices(matrix, parseTerm());
+                    } else if(eat('-')) {
+                        matrix = subtractMatrices(matrix, parseTerm());
+                    } else {
+                        return matrix;
+                    }
+                }
+            }
+
+            Matrix parseTerm() {
+                Matrix matrix = parseFactor();
+                for (;;) {
+                    if(eat('*')) {
+                        matrix = multiplyMatrices(matrix, parseFactor());
+                    } else {
+                        return matrix;
+                    }
+                }
+            }
+
+            Matrix parseFactor() {
+                Matrix matrix;
+                if (currentChar >= 'A' && currentChar <= 'Z') { // matrix names
+                    if(!matrices.containsKey((char) currentChar)) {
+                        // TODO fix message
+                        throw new RuntimeException("Unknown matrix: " + (char) currentChar);
+                    }
+                    matrix = matrices.get((char) currentChar);
+                    movePos();
+                } else {
+                    // TODO fix message
+                    throw new RuntimeException("Unexpected: " + (char) currentChar);
+                }
+
+                return matrix;
+            }
+        }.parse();
+    }
+
+    Matrix multiplyMatrices(Matrix firstMatrix, Matrix secondMatrix) {
+        if(firstMatrix.getColumnsNum() != secondMatrix.getRowsNum()) {
+            throw new ArithmeticException("multiply matrices. Invalid matrix size");
+        }
+
+        Integer[][] result = new Integer[firstMatrix.getRowsNum()][secondMatrix.getColumnsNum()];
+        for (int row = 0; row < result.length; row++) {
+            for (int col = 0; col < result[row].length; col++) {
+                result[row][col] = multiplyRow2Column(firstMatrix, secondMatrix, row, col);
+            }
+        }
+        return new Matrix(result);
+    }
+
+    private int multiplyRow2Column(Matrix firstMatrix, Matrix secondMatrix, int row, int col) {
+        int cell = 0;
+        for (int i = 0; i < firstMatrix.getColumnsNum(); i++) {
+            cell += firstMatrix.getCell(row, i) * secondMatrix.getCell(i, col);
+        }
+        return cell;
+    }
+
+    Matrix subtractMatrices(Matrix minuend, Matrix subtrahend) {
+        // TODO + TDD
+        return null;
+    }
+
+    Matrix sumMatrices(Matrix firstMatrix, Matrix secondMatrix) {
+        // TODO + TDD
+        return null;
     }
 }
