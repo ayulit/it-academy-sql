@@ -94,6 +94,9 @@ public class TestAssignment {
 
                 if(!line.isEmpty()) {
                     app.parseMatrix(line);
+                } else {
+                    System.out.println(app.eval(scanner.nextLine()));
+                    break;
                 }
             }
         } catch (RuntimeException e) {
@@ -177,6 +180,8 @@ public class TestAssignment {
             }
 
             Matrix parse() {
+                // TODO if expression string is null or empty
+
                 movePos();
                 Matrix matrix = parseExpression();
                 if (pos < expression.length()) {
