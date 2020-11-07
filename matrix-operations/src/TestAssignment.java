@@ -59,6 +59,13 @@ public class TestAssignment {
      */
     private Map<Character, Matrix> matrices = new HashMap<>();
 
+    TestAssignment() {
+    }
+
+    TestAssignment(Map<Character, Matrix> matrices) {
+        this.matrices = matrices;
+    }
+
     Map<Character, Matrix> getMatrices() {
         return matrices;
     }
@@ -135,8 +142,7 @@ public class TestAssignment {
         }
     }
 
-    // TODO unit-test
-    public Matrix eval(final String expression) {
+    Matrix eval(final String expression) {
         return new Object() {
             int pos = -1;
             int currentChar;
@@ -160,8 +166,7 @@ public class TestAssignment {
                 movePos();
                 Matrix matrix = parseExpression();
                 if (pos < expression.length()) {
-                    // TODO fix message
-                    throw new RuntimeException("Unexpected: " + (char) currentChar);
+                    throw new RuntimeException("parse expression: " + (char) currentChar + ". Unexpected stop.");
                 }
                 return matrix;
             }
@@ -200,14 +205,12 @@ public class TestAssignment {
                 Matrix matrix;
                 if (currentChar >= 'A' && currentChar <= 'Z') { // matrix names
                     if(!matrices.containsKey((char) currentChar)) {
-                        // TODO fix message
-                        throw new RuntimeException("Unknown matrix: " + (char) currentChar);
+                        throw new RuntimeException("get matrix: " + (char) currentChar + ". Unknown matrix.");
                     }
                     matrix = matrices.get((char) currentChar);
                     movePos();
                 } else {
-                    // TODO fix message
-                    throw new RuntimeException("Unexpected: " + (char) currentChar);
+                    throw new RuntimeException("parse operand: " + (char) currentChar + ". Unexpected operand.");
                 }
 
                 return matrix;

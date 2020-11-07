@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -222,4 +223,55 @@ class Test_TestAssignment {
                 () -> app.sumOrSubtractMatrices(firstMatrix, secondMatrix, Integer::sum));
         assertTrue(thrown.getMessage().contains("Invalid matrix size"));
     }
+
+    @Test
+    void evalTest() {
+        Matrix K = new Matrix(new Integer[][] {
+                {-10,  0,  2},
+                { -6, 10, -6},
+                { -9,  2,  0},
+        });
+
+        Matrix D = new Matrix(new Integer[][] {
+                {0,  6,  7}
+        });
+
+        Matrix M = new Matrix(new Integer[][] {
+                {10, -5, -4}
+        });
+
+        Map<Character, Matrix> matrices = Map.of('K', K, 'D', D, 'M', M);
+
+        app = new TestAssignment(matrices);
+
+        String operationsString = "M+D*K";
+
+        Matrix expected = new Matrix(new Integer[][] {
+                {-89, 69, -40}
+        });
+
+        Matrix actual = app.eval(operationsString);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void evalUnknownMatrixTest() {
+        String operationsString = "M+D*K";
+
+        RuntimeException thrown = assertThrows(
+                RuntimeException.class,
+                () -> app.eval(operationsString));
+        assertTrue(thrown.getMessage().contains("Unknown matrix"));
+    }
+
+    @Test
+    void evalUnexpectedOperandTest() {
+        String operationsString = "m+D*K";
+
+        RuntimeException thrown = assertThrows(
+                RuntimeException.class,
+                () -> app.eval(operationsString));
+        assertTrue(thrown.getMessage().contains("Unexpected operand"));
+    }
+
 }
