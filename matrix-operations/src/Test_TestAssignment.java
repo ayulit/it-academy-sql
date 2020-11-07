@@ -274,4 +274,39 @@ class Test_TestAssignment {
         assertTrue(thrown.getMessage().contains("Unexpected operand"));
     }
 
+    @Test
+    void example03Test() {
+        app.parseMatrix("S=[1]");
+        app.parseMatrix("P=[1]");
+
+        String operationsString = "S+P";
+        String expected = "[2]";
+
+        assertEquals(expected, app.eval(operationsString).toString());
+    }
+
+    @Test
+    void example04Test() {
+        app.parseMatrix("B=[5 2 4; 0 2 -1; 3 -5 -4]");
+        app.parseMatrix("E=[-6 -5 -8; -1 -1 -10; 10 0 -7]");
+        app.parseMatrix("R=[-1 -7 6; -2 9 -4; 6 -10 2]");
+
+        String operationsString = "R+E+B";
+        String expected = "[-2 -10 2; -3 10 -15; 19 -15 -9]";
+
+        assertEquals(expected, app.eval(operationsString).toString());
+    }
+
+    @Test
+    void example05Test() {
+        app.parseMatrix("K=[-10 0 2; -6 10 -6; -9 2 0]");
+        app.parseMatrix("D=[0 6 7]");
+        app.parseMatrix("M=[10 -5 -4]");
+
+        String operationsString = "D*K+M";
+        String expected = "[-89 69 -40]";
+
+        assertEquals(expected, app.eval(operationsString).toString());
+    }
+
 }

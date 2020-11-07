@@ -48,7 +48,21 @@ class Matrix {
 
     @Override
     public String toString() {
-        return Arrays.deepToString(matrix);
+        StringBuilder builder = new StringBuilder();
+        builder.append('[');
+        for (int row = 0; row < getRowsNum() ; row++) {
+            for (int col = 0; col < getColumnsNum() ; col++) {
+                if(col != 0) {
+                    builder.append(' ');
+                }
+                builder.append(matrix[row][col]);
+            }
+            if(row != getRowsNum() - 1) {
+                builder.append("; ");
+            }
+        }
+        builder.append(']');
+        return builder.toString();
     }
 }
 
