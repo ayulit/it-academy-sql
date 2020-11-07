@@ -2,6 +2,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -175,9 +176,9 @@ public class TestAssignment {
                 Matrix matrix = parseTerm();
                 for (;;) {
                     if(eat('+')) {
-                        matrix = sumMatrices(matrix, parseTerm());
+                        matrix = sumOrSubtractMatrices(matrix, parseTerm(), Integer::sum);
                     } else if(eat('-')) {
-                        matrix = subtractMatrices(matrix, parseTerm());
+                        matrix = sumOrSubtractMatrices(matrix, parseTerm(), (a, b) -> a - b);
                     } else {
                         return matrix;
                     }
@@ -236,13 +237,18 @@ public class TestAssignment {
         return cell;
     }
 
-    Matrix subtractMatrices(Matrix minuend, Matrix subtrahend) {
-        // TODO + TDD
-        return null;
-    }
+    Matrix sumOrSubtractMatrices(Matrix firstMatrix, Matrix secondMatrix, BiFunction<Integer, Integer, Integer> func) {
+        if(firstMatrix.getRowsNum() != secondMatrix.getRowsNum() ||
+                firstMatrix.getColumnsNum() != secondMatrix.getColumnsNum()) {
+            throw new ArithmeticException("sum or subtract matrices. Invalid matrix size");
+        }
 
-    Matrix sumMatrices(Matrix firstMatrix, Matrix secondMatrix) {
-        // TODO + TDD
-        return null;
+        Integer[][] result = new Integer[firstMatrix.getRowsNum()][firstMatrix.getColumnsNum()];
+        for (int row = 0; row < result.length; row++) {
+            for (int col = 0; col < result[row].length; col++) {
+                result[row][col] = func.apply(firstMatrix.getCell(row, col), secondMatrix.getCell(row, col));
+            }
+        }
+        return new Matrix(result);
     }
 }

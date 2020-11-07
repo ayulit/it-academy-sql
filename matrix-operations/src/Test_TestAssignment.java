@@ -132,7 +132,7 @@ class Test_TestAssignment {
     }
 
     @Test
-    void multiplyMatrices() {
+    void multiplyMatricesTest() {
         Matrix firstMatrix = new Matrix(new Integer[][] {
                 {1, 5},
                 {2, 3},
@@ -156,7 +156,7 @@ class Test_TestAssignment {
     }
 
     @Test
-    void multiplyMatricesInvalidSize() {
+    void multiplyMatricesInvalidSizeTest() {
         Matrix firstMatrix = new Matrix(new Integer[][] {
                 {1, 5},
                 {2, 3},
@@ -172,6 +172,54 @@ class Test_TestAssignment {
         ArithmeticException thrown = assertThrows(
                 ArithmeticException.class,
                 () -> app.multiplyMatrices(firstMatrix, secondMatrix));
+        assertTrue(thrown.getMessage().contains("Invalid matrix size"));
+    }
+
+    @Test
+    void sumOrSubtractMatricesTest() {
+        Matrix firstMatrix = new Matrix(new Integer[][] {
+                {1, 2, 3},
+                {7, 8, 9},
+        });
+
+        Matrix secondMatrix = new Matrix(new Integer[][] {
+                {5, 6, 7},
+                {3, 4, 5}
+        });
+
+        Matrix expectedSum = new Matrix(new Integer[][] {
+                {6, 8, 10},
+                {10, 12, 14}
+        });
+        Matrix expectedDiff = new Matrix(new Integer[][] {
+                {-4, -4, -4},
+                { 4,  4,  4}
+        });
+
+        Matrix actualSum = app.sumOrSubtractMatrices(firstMatrix, secondMatrix, Integer::sum);
+        assertEquals(expectedSum, actualSum);
+
+        Matrix actualDiff = app.sumOrSubtractMatrices(firstMatrix, secondMatrix, (a, b) -> a - b);
+        assertEquals(expectedDiff, actualDiff);
+    }
+
+    @Test
+    void sumOrSubtractMatricesInvalidSizeTest() {
+        Matrix firstMatrix = new Matrix(new Integer[][] {
+                {1, 2},
+                {2, 3},
+                {1, 7},
+        });
+
+        Matrix secondMatrix = new Matrix(new Integer[][] {
+                {1, 2, 3, 7},
+                {5, 2, 8, 1},
+                {4, 9, 5, 6},
+        });
+
+        ArithmeticException thrown = assertThrows(
+                ArithmeticException.class,
+                () -> app.sumOrSubtractMatrices(firstMatrix, secondMatrix, Integer::sum));
         assertTrue(thrown.getMessage().contains("Invalid matrix size"));
     }
 }
