@@ -239,7 +239,7 @@ public class TestAssignment {
 
     Matrix multiplyMatrices(Matrix firstMatrix, Matrix secondMatrix) {
         if(firstMatrix.getColumnsNum() != secondMatrix.getRowsNum()) {
-            throw new ArithmeticException("multiply matrices. Invalid matrix size");
+            throw new IllegalArgumentException("perform multiplication");
         }
 
         Integer[][] result = new Integer[firstMatrix.getRowsNum()][secondMatrix.getColumnsNum()];
@@ -262,7 +262,7 @@ public class TestAssignment {
     Matrix sumOrSubtractMatrices(Matrix firstMatrix, Matrix secondMatrix, BiFunction<Integer, Integer, Integer> func) {
         if(firstMatrix.getRowsNum() != secondMatrix.getRowsNum() ||
                 firstMatrix.getColumnsNum() != secondMatrix.getColumnsNum()) {
-            throw new ArithmeticException("sum or subtract matrices. Invalid matrix size");
+            throw new IllegalArgumentException("perform addition or subtraction");
         }
 
         Integer[][] result = new Integer[firstMatrix.getRowsNum()][firstMatrix.getColumnsNum()];

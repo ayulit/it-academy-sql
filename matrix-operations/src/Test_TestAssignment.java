@@ -173,10 +173,10 @@ class Test_TestAssignment {
                 {4, 9, 5, 6},
         });
 
-        ArithmeticException thrown = assertThrows(
-                ArithmeticException.class,
+        IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
                 () -> app.multiplyMatrices(firstMatrix, secondMatrix));
-        assertTrue(thrown.getMessage().contains("Invalid matrix size"));
+        assertTrue(thrown.getMessage().contains("perform multiplication"));
     }
 
     @Test
@@ -221,10 +221,10 @@ class Test_TestAssignment {
                 {4, 9, 5, 6},
         });
 
-        ArithmeticException thrown = assertThrows(
-                ArithmeticException.class,
+        IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
                 () -> app.sumOrSubtractMatrices(firstMatrix, secondMatrix, Integer::sum));
-        assertTrue(thrown.getMessage().contains("Invalid matrix size"));
+        assertTrue(thrown.getMessage().contains("perform addition or subtraction"));
     }
 
     @Test

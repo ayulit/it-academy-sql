@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Test;
 
 class E2eTest_TestAssignment {
 
+    private static String E2E_TEST_DATA_FOLDER = "e2e_test_data";
+
     private final PrintStream standardOut = System.out;
     private final PrintStream standardErr = System.err;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
@@ -35,33 +37,50 @@ class E2eTest_TestAssignment {
 
     @Test
     void pub01Test() throws IOException {
-        final InputStream original = System.in;
+        basicE2eTest("pub01.in", "pub01.out", "pub01.err");
+    }
 
-        try(final FileInputStream inputStream = new FileInputStream(new File("pub01.in"));
-            final BufferedReader outputExpectedReader = new BufferedReader(new FileReader("pub01.out"));
-            final BufferedReader errorExpectedReader = new BufferedReader(new FileReader("pub01.err"))) {
+    @Test
+    void pub02Test() throws IOException {
+        basicE2eTest("pub02.in", "pub02.out", "pub02.err");
+    }
 
-            System.setIn(inputStream);
-            TestAssignment.main(null);
+    @Test
+    void pub03Test() throws IOException {
+        basicE2eTest("pub03.in", "pub03.out", "pub03.err");
+    }
 
-            String outputExpected = outputExpectedReader.readLine();
-            String errorExpected = errorExpectedReader.readLine();
+    @Test
+    void example01Test() throws IOException {
+        basicE2eTest("example01.in", "example01.out", "example01.err");
+    }
 
-            assertEquals(outputExpected != null ? outputExpected : "", outputStreamCaptor.toString().trim());
-            assertTrue(errorStreamCaptor.toString().trim().contains(errorExpected != null ? errorExpected : ""));
+    @Test
+    void example06Test() throws IOException {
+        basicE2eTest("example06.in", "example06.out", "example06.err");
+    }
 
-        } finally {
-            System.setIn(original);
-        }
+    @Test
+    void example07Test() throws IOException {
+        basicE2eTest("example07.in", "example07.out", "example07.err");
     }
 
     @Test
     void example08Test() throws IOException {
+        basicE2eTest("example08.in", "example08.out", "example08.err");
+    }
+
+    @Test
+    void example09Test() throws IOException {
+        basicE2eTest("example09.in", "example09.out", "example09.err");
+    }
+
+    private void basicE2eTest(String in, String out, String err) throws IOException {
         final InputStream original = System.in;
 
-        try(final FileInputStream inputStream = new FileInputStream(new File("example08.in"));
-                final BufferedReader outputExpectedReader = new BufferedReader(new FileReader("example08.out"));
-                final BufferedReader errorExpectedReader = new BufferedReader(new FileReader("example08.err"))) {
+        try(final FileInputStream inputStream = new FileInputStream(new File(E2E_TEST_DATA_FOLDER + File.separator + in));
+                final BufferedReader outputExpectedReader = new BufferedReader(new FileReader(E2E_TEST_DATA_FOLDER + File.separator + out));
+                final BufferedReader errorExpectedReader = new BufferedReader(new FileReader(E2E_TEST_DATA_FOLDER + File.separator + err))) {
 
             System.setIn(inputStream);
             TestAssignment.main(null);
