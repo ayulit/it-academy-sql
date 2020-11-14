@@ -75,6 +75,16 @@ class E2eTest_TestAssignment {
         basicE2eTest("example09.in", "example09.out", "example09.err");
     }
 
+    @Test
+    void my01Test() throws IOException {
+        basicE2eTest("my01.in", "my01.out", "my01.err");
+    }
+
+    @Test
+    void my02Test() throws IOException {
+        basicE2eTest("my02.in", "my02.out", "my02.err");
+    }
+
     private void basicE2eTest(String in, String out, String err) throws IOException {
         final InputStream original = System.in;
 

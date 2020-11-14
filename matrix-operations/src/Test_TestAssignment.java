@@ -258,6 +258,16 @@ class Test_TestAssignment {
     }
 
     @Test
+    void evalEmptyTest() {
+        String operationsString = "";
+
+        IllegalArgumentException thrown = assertThrows(
+                IllegalArgumentException.class,
+                () -> app.eval(operationsString));
+        assertTrue(thrown.getMessage().contains("Operations string doesn't exist"));
+    }
+
+    @Test
     void evalUnknownMatrixTest() {
         String operationsString = "M+D*K";
 

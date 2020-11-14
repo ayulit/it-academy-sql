@@ -94,11 +94,12 @@ public class TestAssignment {
 
                 if(!line.isEmpty()) {
                     app.parseMatrix(line);
-                } else {
+                } else if (scanner.hasNextLine()) {
                     System.out.println(app.eval(scanner.nextLine()));
-                    break;
+                    return;
                 }
             }
+            throw new IllegalArgumentException("read operations. Operations string doesn't exist.");
         } catch (RuntimeException e) {
             System.err.println("Exception caught: " + e.getClass().getSimpleName() + ". Can't " + e.getMessage() + ".");
         }
@@ -111,7 +112,7 @@ public class TestAssignment {
      * After extraction variable stored into {@code matrices} Map.
      *
      *
-     * @param      matrixLine   the {@code String} containing the representation of matrix to be parsed
+     * @param      matrixLine the {@code String} containing the representation of matrix to be parsed
      *                  in the following way name=[x11 x12 ... x1n; x21 x22 ... x2n;...,xm1 xm2 ... xmm]
      * @throws     RuntimeException if the matrices Map
      *             already contains specific {@code matrixName}.
@@ -135,6 +136,20 @@ public class TestAssignment {
         }
     }
 
+
+    /**
+     * Parses the string argument containing the representation of matrix.
+     *
+     * After parsing values stored into {@code Matrix} object.
+     *
+     *
+     * @param      matrixExpression the {@code String} containing the representation of matrix to be parsed
+     *                  in the following way x11 x12 ... x1n; x21 x22 ... x2n;...,xm1 xm2 ... xmm
+     * @return     the {@code Matrix} represented by the string argument.
+     * @throws     ArrayStoreException if the matrix rows have different size.
+     * @throws     IllegalArgumentException  if {@code matrixExpression} has wrong format.
+     * @throws     IllegalArgumentException  if the matrix values are not integer.
+     */
     Matrix acquireMatrix(String matrixExpression) {
         String[] rows = matrixExpression.split(";");
 
@@ -159,6 +174,20 @@ public class TestAssignment {
         }
     }
 
+    /**
+     * Parses the string argument containing the representation of matrix operations.
+     * Works with three basic matrix operations (in priority): multiplication, addition and subtraction.
+     *
+     * After parsing method evaluates all operations with the relevant matrices and returns result as the {@code Matrix}.
+     *
+     *
+     * @param      expression the {@code String} containing the representation of operators and operands to be parsed
+     *                  in the following way D*K+M
+     * @return     the {@code Matrix} evaluated.
+     * @throws     ArrayStoreException if the matrix rows have different size.
+     * @throws     IllegalArgumentException  if {@code matrixExpression} has wrong format.
+     * @throws     IllegalArgumentException  if the matrix values are not integer.
+     */
     Matrix eval(final String expression) {
         return new Object() {
             int pos = -1;
@@ -180,7 +209,9 @@ public class TestAssignment {
             }
 
             Matrix parse() {
-                // TODO if expression string is null or empty
+                if(expression == null || expression.isEmpty()) {
+                    throw new IllegalArgumentException("read operations. Operations string doesn't exist.");
+                }
 
                 movePos();
                 Matrix matrix = parseExpression();
