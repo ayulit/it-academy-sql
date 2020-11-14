@@ -146,6 +146,7 @@ public class TestAssignment {
      * @param      matrixExpression the {@code String} containing the representation of matrix to be parsed
      *                  in the following way x11 x12 ... x1n; x21 x22 ... x2n;...,xm1 xm2 ... xmm
      * @return     the {@code Matrix} represented by the string argument.
+     *
      * @throws     ArrayStoreException if the matrix rows have different size.
      * @throws     IllegalArgumentException  if {@code matrixExpression} has wrong format.
      * @throws     IllegalArgumentException  if the matrix values are not integer.
@@ -178,15 +179,21 @@ public class TestAssignment {
      * Parses the string argument containing the representation of matrix operations.
      * Works with three basic matrix operations (in priority): multiplication, addition and subtraction.
      *
-     * After parsing method evaluates all operations with the relevant matrices and returns result as the {@code Matrix}.
+     * During parsing method evaluates all operations with the relevant matrices and returns result as the {@code Matrix}.
+     *
+     * Parsing grammar:
+     *  expression = term | expression `+` term | expression `-` term
+     *  term = factor | term `*` factor
+     *  factor = Matrix
      *
      *
      * @param      expression the {@code String} containing the representation of operators and operands to be parsed
      *                  in the following way D*K+M
      * @return     the {@code Matrix} evaluated.
-     * @throws     ArrayStoreException if the matrix rows have different size.
-     * @throws     IllegalArgumentException  if {@code matrixExpression} has wrong format.
-     * @throws     IllegalArgumentException  if the matrix values are not integer.
+     *
+     * @throws     IllegalArgumentException  if {@code expression} is null or empty.
+     * @throws     RuntimeException  if there is no specific matrix in the {@code matrices} Map.
+     * @throws     RuntimeException  if the operand has invalid name.
      */
     Matrix eval(final String expression) {
         return new Object() {
@@ -220,12 +227,6 @@ public class TestAssignment {
                 }
                 return matrix;
             }
-
-            // TODO: adopt to JavaDoc
-            // Grammar:
-            // expression = term | expression `+` term | expression `-` term
-            // term = factor | term `*` factor | term `/` factor
-            // factor = `+` factor | `-` factor | `(` expression `)` | number | functionName factor | factor `^` factor
 
             Matrix parseExpression() {
                 Matrix matrix = parseTerm();
@@ -290,6 +291,19 @@ public class TestAssignment {
         return cell;
     }
 
+    /**
+     * Returns a sum or subtraction of two {@code Matrix} arguments according to func.
+     *
+     * @param      firstMatrix the first {@code Matrix}
+     * @param      secondMatrix the second {@code Matrix}
+     * @param      func the {@code BiFunction<Integer, Integer, Integer>} which can be
+     *                 1. 'Integer::sum' for addition
+     *                 2. lambda '(a,b) -> a - b' for subtraction
+     *
+     * @return     the {@code Matrix} evaluated.
+     *
+     * @throws     IllegalArgumentException  if matrices' dimension is different.
+     */
     Matrix sumOrSubtractMatrices(Matrix firstMatrix, Matrix secondMatrix, BiFunction<Integer, Integer, Integer> func) {
         if(firstMatrix.getRowsNum() != secondMatrix.getRowsNum() ||
                 firstMatrix.getColumnsNum() != secondMatrix.getColumnsNum()) {
